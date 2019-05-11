@@ -10,6 +10,26 @@ class HuffmanCoding {
     HashMap<Character, String> lettersTable;
     HashSet<Node> nodes;
 
+    public HuffmanCoding(HashSet<Node> nodes) {
+        this.nodes = nodes;
+        lettersTable = new HashMap<>(nodes.size());
+    }
+
+    public HashMap<Character, String> getLettersTable() {
+        return lettersTable;
+    }
+
+    public void setLettersTable(HashMap<Character, String> lettersTable) {
+        this.lettersTable = lettersTable;
+    }
+
+    public HashSet<Node> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(HashSet<Node> nodes) {
+        this.nodes = nodes;
+    }
 
     public void makeHuffmanTree() {
         if (nodes == null)
