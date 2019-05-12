@@ -1,7 +1,8 @@
 package Models;
 
+import com.google.gson.Gson;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -46,12 +47,23 @@ public class Compressor {
                 int i1 = Integer.parseInt(stringBuilder.substring(i, i + stringBuilder.length() % 8), 2);
                 fileOutputStream.write((byte) i1 << (8 - stringBuilder.length() % 8));
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            fileOutputStream.close();
+            writeRestoreData(stringBuilder.toString(), lettersTable, str.length());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void writeRestoreData(String outStr, HashMap<Character, String> lettersTable, long length) {
+        Gson gson = new Gson();
+        Data data = new Data(lettersTable, outStr.length(), length);
+        String toJson = gson.toJson(data);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(new File("restoreData.json"));
+            fileOutputStream.write(toJson.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
-
-
