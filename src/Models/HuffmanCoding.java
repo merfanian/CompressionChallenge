@@ -62,7 +62,9 @@ class HuffmanCoding {
     }
 
     private void makelettersCode(Node root, String s) {
-        if (root.getLeft() == null && root.getRight() == null & Character.isLetter(root.getCharacter())) {
+        if (root.getLeft() == null && root.getRight() == null
+            //    & Character.isLetter(root.getCharacter())
+        ) {
             System.out.println(root.getCharacter() + ":" + s);
             lettersTable.put(root.getCharacter(), s);
             return;

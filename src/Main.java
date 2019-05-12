@@ -10,11 +10,12 @@ public class Main {
         System.out.println("Hi, type your command num:");
         System.out.println("1. compress file");
         System.out.println("2. decompress file");
-        int i = scanner.nextInt();
+        int i = 1;
         switch (i) {
             case 1:
                 Compressor compressor = new Compressor(scanner);
-                compressor.compress();
+                String s = scanner.nextLine();
+                compressor.compress(s);
                 break;
             case 2:
                 new Decompressor();
