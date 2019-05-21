@@ -10,22 +10,30 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class Compressor {
-    Scanner scanner;
 
-    public Compressor(Scanner scanner) {
-        this.scanner = scanner;
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        try {
+            Scanner scanner = new Scanner(new File("input.txt"));
+            StringBuilder stringBuilder = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                String s = scanner.nextLine();
+                stringBuilder.append(s).append("\n");
+            }
+            Compressor compressor = new Compressor();
+            compressor.compress(stringBuilder.toString());
+            scanner.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("File compressed succesfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms");
     }
-
     public void compress(String s) {
         CharacterCounter characterCounter = new CharacterCounter(s);
         HashSet<Node> nodes = characterCounter.getNodes();
         HuffmanCoding huffmanCoding = new HuffmanCoding(nodes);
         huffmanCoding.makeHuffmanTree();
         HashMap<Character, String> lettersTable = huffmanCoding.getLettersTable();
-
-        for (int i = 0; i < s.length(); i++) {
-            System.out.print(lettersTable.get(s.charAt(i)));
-        }
         write(s, lettersTable);
     }
 

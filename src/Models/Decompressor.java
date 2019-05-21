@@ -1,18 +1,14 @@
 package Models;
 
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 public class Decompressor {
 
-    @Test
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         try {
             FileReader fileReader = new FileReader("restoreData.json");
             Gson gson = new Gson();
@@ -29,14 +25,15 @@ public class Decompressor {
                 bytes[i++] = temp[0];
             }
             String s = convertBytesToString(bytes);
-            System.out.println(s);
             Decompressor decompressor = new Decompressor();
             decompressor.decompress(data, s);
+            fileReader.close();
+            fileInputStream.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println("File decompressed successfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms");
 
     }
 
@@ -74,7 +71,11 @@ public class Decompressor {
                 }
             }
         }
-
-        System.out.println(stringBuilder);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
+            fileOutputStream.write(stringBuilder.toString().getBytes());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

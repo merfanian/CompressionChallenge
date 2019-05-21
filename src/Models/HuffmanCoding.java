@@ -65,7 +65,6 @@ class HuffmanCoding {
         if (root.getLeft() == null && root.getRight() == null
             //    & Character.isLetter(root.getCharacter())
         ) {
-            System.out.println(root.getCharacter() + ":" + s);
             lettersTable.put(root.getCharacter(), s);
             return;
         }
