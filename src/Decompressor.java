@@ -1,5 +1,3 @@
-package Models;
-
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -33,7 +31,7 @@ public class Decompressor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("File decompressed successfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println("\n\nFile decompressed successfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms\n\n");
 
     }
 
@@ -72,8 +70,10 @@ public class Decompressor {
             }
         }
         try {
+            String decode = new BWT().decode(stringBuilder.toString());
+            String substring = decode.substring(0, decode.length() - 2);
             FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
-            fileOutputStream.write(stringBuilder.toString().getBytes());
+            fileOutputStream.write(substring.getBytes());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

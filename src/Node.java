@@ -1,5 +1,3 @@
-package Models;
-
 import java.util.Comparator;
 
 public class Node {

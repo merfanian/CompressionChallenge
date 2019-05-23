@@ -1,5 +1,3 @@
-package Models;
-
 import Exceptions.TableNotFoundException;
 
 import java.util.HashMap;

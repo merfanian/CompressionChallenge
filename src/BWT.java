@@ -14,8 +14,8 @@ public class BWT {
         System.err.println("decoded string received in java: " + decode);
     }
 
-    private native String encode(String s);
+    public native String encode(String s);
 
-    private native String decode(String s);
+    public native String decode(String s);
 }
 

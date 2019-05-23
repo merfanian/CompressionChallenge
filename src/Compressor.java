@@ -1,5 +1,3 @@
-package Models;
-
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -8,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
+
 
 public class Compressor {
 
@@ -20,13 +19,15 @@ public class Compressor {
                 String s = scanner.nextLine();
                 stringBuilder.append(s).append("\n");
             }
+
+            String encode = new BWT().encode("$" + stringBuilder.toString());
             Compressor compressor = new Compressor();
-            compressor.compress(stringBuilder.toString());
+            compressor.compress(encode);
             scanner.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        System.out.println("File compressed succesfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println("\n\nFile compressed succesfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms\n\n");
     }
     public void compress(String s) {
         CharacterCounter characterCounter = new CharacterCounter(s);
