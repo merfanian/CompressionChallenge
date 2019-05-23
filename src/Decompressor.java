@@ -70,7 +70,10 @@ public class Decompressor {
             }
         }
         try {
-            String decode = new BWT().decode(stringBuilder.toString());
+            System.out.println(stringBuilder.toString());
+            String s = new RunLengthEncoder().decode(stringBuilder.toString());
+            System.out.println(s);
+            String decode = new BWT().decode(s);
             String substring = decode.substring(0, decode.length() - 2);
             FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
             fileOutputStream.write(substring.getBytes());

@@ -89,6 +89,7 @@ char *findLastChar(char *input_text, int *suffix_arr, int n)
         char *bwt_arr = findLastChar(input_text, suffix_arr, len_text);
 
         (*env)->ReleaseStringUTFChars(env, javaString, nativeString);
+        puts(bwt_arr);
         jstring result = (*env)->NewStringUTF(env,bwt_arr );
         return result;
     }

@@ -21,8 +21,9 @@ public class Compressor {
             }
 
             String encode = new BWT().encode("$" + stringBuilder.toString());
+            String toWrite = new RunLengthEncoder().encode(encode);
             Compressor compressor = new Compressor();
-            compressor.compress(encode);
+            compressor.compress(toWrite);
             scanner.close();
         } catch (IOException ex) {
             ex.printStackTrace();
