@@ -19,8 +19,7 @@ public class Compressor {
                 String s = scanner.nextLine();
                 stringBuilder.append(s).append("\n");
             }
-
-            String encode = new BWT().encode("$" + stringBuilder.toString());
+            String encode = BurrowsWheeler.encode("$" + stringBuilder.toString());
             String toWrite = new RunLengthEncoder().encode(encode);
             Compressor compressor = new Compressor();
             compressor.compress(toWrite);
@@ -30,12 +29,13 @@ public class Compressor {
         }
         System.out.println("\n\nFile compressed succesfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms\n\n");
     }
+
     public void compress(String s) {
         CharacterCounter characterCounter = new CharacterCounter(s);
         HashSet<Node> nodes = characterCounter.getNodes();
-        HuffmanCoding huffmanCoding = new HuffmanCoding(nodes);
-        huffmanCoding.makeHuffmanTree();
-        HashMap<Character, String> lettersTable = huffmanCoding.getLettersTable();
+        HuffmanEncoder huffmanEncoder = new HuffmanEncoder(nodes);
+        huffmanEncoder.makeHuffmanTree();
+        HashMap<Character, String> lettersTable = huffmanEncoder.getLettersTable();
         write(s, lettersTable);
     }
 

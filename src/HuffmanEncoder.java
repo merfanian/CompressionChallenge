@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
-class HuffmanCoding {
+class HuffmanEncoder {
     HashMap<Character, String> lettersTable;
     HashSet<Node> nodes;
 
-    public HuffmanCoding(HashSet<Node> nodes) {
+    public HuffmanEncoder(HashSet<Node> nodes) {
         this.nodes = nodes;
         lettersTable = new HashMap<>(nodes.size());
     }

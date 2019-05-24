@@ -70,13 +70,10 @@ public class Decompressor {
             }
         }
         try {
-            System.out.println(stringBuilder.toString());
             String s = new RunLengthEncoder().decode(stringBuilder.toString());
-            System.out.println(s);
-            String decode = new BWT().decode(s);
-            String substring = decode.substring(0, decode.length() - 2);
+            String decode = BurrowsWheeler.decode(s);
             FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
-            fileOutputStream.write(substring.getBytes());
+            fileOutputStream.write(decode.substring(0, decode.length() - 2).getBytes());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
