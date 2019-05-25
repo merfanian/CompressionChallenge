@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class RunLengthEncoder {
 
     public String encode(String string) {
@@ -19,10 +22,11 @@ public class RunLengthEncoder {
         return stringBuilder.toString();
     }
 
-    public String decode(String string) {
-        StringBuilder stringBuilder = new StringBuilder();
+    public String decode(String string, int length) {
+        ArrayList<Character> chars = new ArrayList<Character>(length);
         int count = 0;
         char c = string.charAt(0);
+        int index = 0;
         for (int i = 0; i < string.length(); i++) {
             if (!Character.isDigit(string.charAt(i)))
                 c = string.charAt(i);
@@ -33,11 +37,13 @@ public class RunLengthEncoder {
                 if (count == 0)
                     count = 1;
                 while (count > 0) {
-                    stringBuilder.append(c);
+                    chars.add(c);
                     count--;
+
                 }
             }
         }
-        return stringBuilder.toString();
+        return chars.stream().map(Object::toString).collect(Collectors.joining());
+
     }
 }

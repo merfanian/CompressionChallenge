@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -13,33 +14,78 @@ public class Compressor {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         try {
+            System.out.println("Compression starts, please wait, process could take 1 min or 2.\n");
             Scanner scanner = new Scanner(new File("input.txt"));
             StringBuilder stringBuilder = new StringBuilder();
             while (scanner.hasNextLine()) {
                 String s = scanner.nextLine();
                 stringBuilder.append(s).append("\n");
             }
-            String encode = BurrowsWheeler.encode("$" + stringBuilder.toString());
-            String toWrite = new RunLengthEncoder().encode(encode);
+            System.out.println("\t1- Scan completed.");
             Compressor compressor = new Compressor();
-            compressor.compress(toWrite);
+            HashMap<Character, Character> characterHashMap = compressor.mapToAscii(stringBuilder.toString());
+            char[] chars = new char[stringBuilder.toString().length()];
+            for (int i = 0; i < stringBuilder.length(); i++) {
+                chars[i] = characterHashMap.get(stringBuilder.charAt(i));
+            }
+            String asciid = String.valueOf(chars);
+            System.out.println("\t2- Do BWT on partitions:");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < asciid.length() / 900000 + 1; i++) {
+                sb.append(BurrowsWheelerEncoder.encode("$" + asciid.substring(
+                        i * 900000, (i + 1) * 900000 < asciid.length() ? (i + 1) * 900000 : asciid.length())));
+                System.out.println("\t\t Partition " + (i + 1) + " BWT done!");
+            }
+            String encode = sb.toString();
+            System.out.println("\t3- BWT Completed!");
+            String toWrite = new RunLengthEncoder().encode(encode);
+            System.out.println("\t4- RLE Completed!");
+            compressor.compress(toWrite, characterHashMap);
+            System.out.println("\t5- HuffmanEncoding Completed!");
             scanner.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        System.out.println("\n\nFile compressed succesfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms\n\n");
+        System.out.println("\n\nFile compressed successfully!\nTime elapsed: " + (System.currentTimeMillis() - start) + " ms\n\n");
     }
 
-    public void compress(String s) {
+    public void compress(String s, HashMap<Character, Character> charMap) {
         CharacterCounter characterCounter = new CharacterCounter(s);
         HashSet<Node> nodes = characterCounter.getNodes();
         HuffmanEncoder huffmanEncoder = new HuffmanEncoder(nodes);
         huffmanEncoder.makeHuffmanTree();
         HashMap<Character, String> lettersTable = huffmanEncoder.getLettersTable();
-        write(s, lettersTable);
+        write(s, lettersTable, charMap);
     }
 
-    private void write(String str, HashMap<Character, String> lettersTable) {
+    private HashMap<Character, Character> mapToAscii(String s) {
+        HashSet<Character> asciiChars = new HashSet<Character>();
+        HashSet<Character> nonAsciiChars = new HashSet<Character>();
+        HashMap<Character, Character> characterHashMap = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            if ((s.charAt(i) < 48 || s.charAt(i) > 57) && s.charAt(i) < 128)
+                asciiChars.add(s.charAt(i));
+            else
+                nonAsciiChars.add(s.charAt(i));
+        }
+        Random random = new Random();
+        asciiChars.forEach(character -> characterHashMap.put(character, character));
+        nonAsciiChars.forEach(character -> {
+            while (true) {
+                int i = random.nextInt(69) + 58;
+                System.err.println(i);
+                if (!characterHashMap.containsValue((char) i)) {
+                    characterHashMap.put(character, (char) i);
+                    break;
+                }
+            }
+
+        });
+        return characterHashMap;
+    }
+
+
+    private void write(String str, HashMap<Character, String> lettersTable, HashMap<Character, Character> charMap) {
 
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
@@ -58,15 +104,15 @@ public class Compressor {
                 fileOutputStream.write((byte) i1 << (8 - stringBuilder.length() % 8));
             }
             fileOutputStream.close();
-            writeRestoreData(stringBuilder.toString(), lettersTable, str.length());
+            writeRestoreData(stringBuilder.toString(), lettersTable, str.length(), charMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void writeRestoreData(String outStr, HashMap<Character, String> lettersTable, long length) {
+    private void writeRestoreData(String outStr, HashMap<Character, String> lettersTable, long length, HashMap<Character, Character> charMap) {
         Gson gson = new Gson();
-        Data data = new Data(lettersTable, outStr.length(), length);
+        Data data = new Data(lettersTable, charMap, outStr.length(), length);
         String toJson = gson.toJson(data);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(new File("restoreData.json"));

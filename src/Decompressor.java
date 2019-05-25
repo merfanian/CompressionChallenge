@@ -70,10 +70,25 @@ public class Decompressor {
             }
         }
         try {
-            String s = new RunLengthEncoder().decode(stringBuilder.toString());
-            String decode = BurrowsWheeler.decode(s);
+
+            String s = new RunLengthEncoder().decode(stringBuilder.toString(), (int) data.decodedLength);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < s.length() / 900001 + 1; i++) {
+                sb.append(BurrowsWheelerEncoder.decode(
+                        s.substring(i * 900001, (i + 1) * 900001 < s.length() ? (i + 1) * 900001 : s.length())));
+            }
+
+            String decode = sb.toString().replaceAll("\\$", "");
+            System.out.println(sb);
+            char[] chars = new char[decode.length()];
+            HashMap<Character, Character> decodeHashMap = new HashMap<>();
+            data.characterHashMap.forEach((character, character2) -> decodeHashMap.put(character2, character));
+            for (int i = 0; i < decode.length(); i++) {
+                chars[i] = decodeHashMap.get(decode.charAt(i));
+            }
+            String fullDecoded = String.valueOf(chars);
             FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
-            fileOutputStream.write(decode.substring(0, decode.length() - 2).getBytes());
+            fileOutputStream.write(fullDecoded.substring(0, decode.length() - 1).getBytes());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

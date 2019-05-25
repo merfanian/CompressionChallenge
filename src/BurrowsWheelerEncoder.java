@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author Liang Wang
  */
-public class BurrowsWheeler {
+public class BurrowsWheelerEncoder {
 
     // apply Burrows-Wheeler encoding, reading from standard input and writing to standard output
     public static String encode(String s) {
@@ -86,4 +86,4 @@ public class BurrowsWheeler {
         return;
     } // end method main
 
-} // end class BurrowsWheeler
+} // end class BurrowsWheelerEncoder
