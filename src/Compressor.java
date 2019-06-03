@@ -14,7 +14,7 @@ public class Compressor {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         try {
-            System.out.println("Compression starts, please wait, process could take 1 min or 2.\n");
+            System.out.println("Compression starts, please wait, process may take while.\n");
             Scanner scanner = new Scanner(new File("input.txt"));
             StringBuilder stringBuilder = new StringBuilder();
             while (scanner.hasNextLine()) {
@@ -59,21 +59,20 @@ public class Compressor {
     }
 
     private HashMap<Character, Character> mapToAscii(String s) {
-        HashSet<Character> asciiChars = new HashSet<Character>();
-        HashSet<Character> nonAsciiChars = new HashSet<Character>();
+        HashSet<Character> digits = new HashSet<Character>();
+        HashSet<Character> nonDigits = new HashSet<Character>();
         HashMap<Character, Character> characterHashMap = new HashMap<>();
         for (int i = 0; i < s.length(); i++) {
-            if ((s.charAt(i) < 48 || s.charAt(i) > 57) && s.charAt(i) < 128)
-                asciiChars.add(s.charAt(i));
+            if (Character.isDigit(s.charAt(i)))
+                digits.add(s.charAt(i));
             else
-                nonAsciiChars.add(s.charAt(i));
+                nonDigits.add(s.charAt(i));
         }
         Random random = new Random();
-        asciiChars.forEach(character -> characterHashMap.put(character, character));
-        nonAsciiChars.forEach(character -> {
+        nonDigits.forEach(character -> characterHashMap.put(character, character));
+        digits.forEach(character -> {
             while (true) {
-                int i = random.nextInt(69) + 58;
-                System.err.println(i);
+                int i = random.nextInt(58) + 68;
                 if (!characterHashMap.containsValue((char) i)) {
                     characterHashMap.put(character, (char) i);
                     break;

@@ -79,7 +79,6 @@ public class Decompressor {
             }
 
             String decode = sb.toString().replaceAll("\\$", "");
-            System.out.println(sb);
             char[] chars = new char[decode.length()];
             HashMap<Character, Character> decodeHashMap = new HashMap<>();
             data.characterHashMap.forEach((character, character2) -> decodeHashMap.put(character2, character));
@@ -88,7 +87,7 @@ public class Decompressor {
             }
             String fullDecoded = String.valueOf(chars);
             FileOutputStream fileOutputStream = new FileOutputStream("output.txt");
-            fileOutputStream.write(fullDecoded.substring(0, decode.length() - 1).getBytes());
+            fileOutputStream.write(fullDecoded.substring(0, decode.length()).getBytes());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
